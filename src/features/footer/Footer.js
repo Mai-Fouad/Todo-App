@@ -13,7 +13,7 @@ const RemainingTodos = ({ count }) =>{
     )
 }
 
-const StatusFilters = ({value: status, onChange}) =>{
+const StatusFilter = ({value: status, onChange}) =>{
     const renderedFilters = Object.keys(StatusFilters).map((key) =>{
         const value = StatusFilters[key];
         const handleClick = () => onChange(value);
@@ -45,7 +45,7 @@ const ColorFilters = ({value: colors, onChange}) =>{
         return(
             <label key={color}>
                 <input
-                    type={checkbox}
+                    type='checkbox'
                     name={color}
                     checked={checked}
                     onChange={handleChange}
@@ -84,7 +84,7 @@ const Footer = () =>{
                 <button className="button">Clear Completed</button>
             </div>
             <RemainingTodos count={todosRemaning}/>
-            <StatusFilters value={status} onChange={onStatusChange}/>
+            <StatusFilter value={status} onChange={onStatusChange}/>
             <ColorFilters value={colors} onChange={onColorChange}/>
         </footer>
     )

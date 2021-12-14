@@ -1,6 +1,6 @@
 import React from "react";
 import { ReactComponent as TimesSolid } from './times-solid.svg';
-import { availableColors , capitalize } from './filters/colors';
+import { availableColors, capitalize } from "../filters/colors";
 
 const TodoListItems = ({ todo, onColorChange, onCompletedChange, onDelete })  =>{
     const { text, completed, color} = todo;
