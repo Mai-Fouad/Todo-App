@@ -1,5 +1,5 @@
 import React from "react";
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
 import { availableColors, capitalize } from "../filters/colors";
 import { StatusFilters } from "../filters/filtersSlice";
@@ -41,7 +41,7 @@ const ColorFilters = ({value: colors, onChange}) =>{
         const checked = colors.includes(color);
         const handleChange = () =>{
             const changeType = checked ? 'removed' : 'added';
-            onChange(color, changeType)
+            onChange(color, changeType);
         }
         return(
             <label key={color}>
@@ -68,23 +68,30 @@ const ColorFilters = ({value: colors, onChange}) =>{
 }
 
 const Footer = () =>{
-    const todosRemaning = useSelector(state =>{
-        const uncompletedTodos = state.todos.filter(todo=> !todo.completed)
+    const dispatch = useDispatch();
+
+    const todosRemaning = useSelector((state) =>{
+        const uncompletedTodos = state.todos.filter((todo)=> !todo.completed)
         return uncompletedTodos.lenght;
     })
-    const { status , colors } = useSelector(state => state.filters)
+
+    const { status , colors } = useSelector((state) => state.filters)
+
+    const onMarkCompletedClicked = () => dispatch({type: 'todos/allCompleted'});
+    const onClearCompletedClicked = () => dispatch({type: 'todos/completedCleared'});
 
     const onColorChange = (color, changeType) =>{
-        console.log('Color Change: ', { color, changeType});
+        dispatch({type: 'filters/colorFilterChanged', payload: {color, changeType}});
     }
-    const onStatusChange = (status) => console.log('Status Change: ', status);
-
+    const onStatusChange = (status) => {
+        dispatch({type: 'filters/statusFilterChanged', payload: status});
+    }
     return(
         <footer className="footer">
             <div className="actions">
                 <h5>Actions</h5>
-                <button className="button">Mark all Completed</button>
-                <button className="button">Clear Completed</button>
+                <button className="button" onClick={onMarkCompletedClicked}>Mark all Completed</button>
+                <button className="button" onClick={onClearCompletedClicked}>Clear Completed</button>
             </div>
             <RemainingTodos count={todosRemaning}/>
             <StatusFilter value={status} onChange={onStatusChange}/>
