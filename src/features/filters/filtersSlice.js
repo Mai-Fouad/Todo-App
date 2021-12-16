@@ -16,7 +16,7 @@ export default function filtersReducer(state = initialState, action){
                 status: action.payload
             }
         }
-        case 'colorFilterChanged':{
+        case 'filters/colorFilterChanged':{
             let { color, changeType} = action.payload;
             const { colors } = state;
             switch (changeType){

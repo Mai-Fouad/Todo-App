@@ -5,7 +5,7 @@ import { availableColors, capitalize } from "../filters/colors";
 
 
 const selectTodoById = ( state , todoId ) =>{
-    return state.todos.find(todo => todo.id === todoId);
+    return state.todos.find((todo) => todo.id === todoId);
 }
 
 const TodoListItem = ({ id })  =>{
