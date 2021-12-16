@@ -1,14 +1,18 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
+import { SaveNewTodo } from "../todos/todosSlice";
 
-const Header = () =>{
-    const [ text, setText ] = useState('');
+const Header = () => {
+
+    const [text, setText] = useState('');
     const dispatch = useDispatch();
+
     const handleChange = (e) => setText(e.target.value);
-    const handleKeyDown = e =>{
-        const trimmedText = e.target.value.trim();
-        if(e.key ==='Enter' && trimmedText){
-            dispatch({type: 'todos/todoAdded', payload: trimmedText});
+
+    const handleKeyDown = e => {
+        const trimmedText = text.trim();
+        if (e.which === 13 && trimmedText) {
+            dispatch(SaveNewTodo(trimmedText));
             setText('');
         }
     }
