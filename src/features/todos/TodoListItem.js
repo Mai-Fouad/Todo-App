@@ -4,29 +4,29 @@ import { ReactComponent as TimesSolid } from './times-solid.svg';
 import { availableColors, capitalize } from "../filters/colors";
 import { todoColorSelected, todoDeleted, todoToggled, selectTodoById } from "./todosSlice";
 
-const TodoListItem = ({ id })  =>{
-    const todo = useSelector((state) => selectTodoById(state,id));
-    const { text, completed, color} = todo;
-    
+const TodoListItem = ({ id }) => {
+    const todo = useSelector((state) => selectTodoById(state, id));
+    const { text, completed, color } = todo;
+
     const dispatch = useDispatch();
-    
-    const handleCompletedChanged = () =>{
+
+    const handleCompletedChanged = () => {
         dispatch(todoToggled(todo.id));
     }
 
-    const handleColorChanged = (e) =>{
+    const handleColorChanged = (e) => {
         const color = e.target.value;
         dispatch(todoColorSelected(todo.id, color));
     }
 
-    const onDelete = () =>{
+    const onDelete = () => {
         dispatch(todoDeleted(todo.id));
     }
-    const colorOptions = availableColors.map((c)=>{
-        <option key={c} value={c}>
-            {capitalize(c)}
-        </option>
-    })
+    const colorOptions = availableColors.map((c) => (
+            <option key={c} value={c}>
+                {capitalize(c)}
+            </option>
+    ))
 
     return (
         <li>
@@ -36,14 +36,14 @@ const TodoListItem = ({ id })  =>{
                         className="toggle"
                         type="checkbox"
                         checked={completed}
-                        onChange={handleCompletedChanged}/>
+                        onChange={handleCompletedChanged} />
                     <div className="todo-text">{text}</div>
                 </div>
                 <div className="segment buttons">
                     <select
                         className="colorPicker"
                         value={color}
-                        style={{color}}
+                        style={{ color }}
                         onChange={handleColorChanged}
                     >
                         <option value=''></option>
