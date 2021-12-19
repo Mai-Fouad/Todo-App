@@ -1,4 +1,3 @@
-import logo from './logo.svg';
 import React from 'react';
 import Header from './features/header/Header';
 import TodoList from './features/todos/TodoList';

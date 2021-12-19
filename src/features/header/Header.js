@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { SaveNewTodo } from "../todos/todosSlice";
+import { saveNewTodo } from "../todos/todosSlice";
 
 const Header = () => {
 
@@ -12,7 +12,7 @@ const Header = () => {
     const handleKeyDown = e => {
         const trimmedText = text.trim();
         if (e.which === 13 && trimmedText) {
-            dispatch(SaveNewTodo(trimmedText));
+            dispatch(saveNewTodo(trimmedText));
             setText('');
         }
     }

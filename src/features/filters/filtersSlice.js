@@ -1,27 +1,27 @@
-export const StatusFilters ={
+export const StatusFilters = {
     All: 'all',
     Active: 'active',
     Completed: 'completed'
 }
 const initialState = {
-    status : StatusFilters.All,
+    status: StatusFilters.All,
     colors: []
 }
 
-export default function filtersReducer(state = initialState, action){
-    switch (action.type){
-        case 'filters/statusFilterChanged':{
-            return  {
+export default function filtersReducer(state = initialState, action) {
+    switch (action.type) {
+        case 'filters/statusFilterChanged': {
+            return {
                 ...state,
                 status: action.payload
             }
         }
-        case 'filters/colorFilterChanged':{
-            let { color, changeType} = action.payload;
+        case 'filters/colorFilterChanged': {
+            let { color, changeType } = action.payload;
             const { colors } = state;
-            switch (changeType){
-                case 'added':{
-                    if (colors.includes(color)){
+            switch (changeType) {
+                case 'added': {
+                    if (colors.includes(color)) {
                         return state;
                     }
                     return {
@@ -29,7 +29,7 @@ export default function filtersReducer(state = initialState, action){
                         colors: state.colors.concat(color)
                     }
                 }
-                case 'removed':{
+                case 'removed': {
                     return {
                         ...state,
                         colors: state.colors.filter(
@@ -43,5 +43,16 @@ export default function filtersReducer(state = initialState, action){
         }
         default:
             return state;
+    }
+}
+export const statusFilterChanged = (status) =>({
+    type: 'filters/statusFilterChanged',
+    payload: status
+})
+
+export const colorFilterChanged = (color, changeType) => {
+    return {
+        type: 'filters/colorFilterChanged',
+        payload: { color, changeType }
     }
 }
