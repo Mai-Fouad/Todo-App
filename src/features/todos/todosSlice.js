@@ -4,7 +4,7 @@ import { StatusFilters } from '../filters/filtersSlice';
 
 const initialState = {
     status: 'idle',
-    entities: []
+    entities: {}
 };
 
 export default function todosReducer(state = initialState, action) {
@@ -16,62 +16,85 @@ export default function todosReducer(state = initialState, action) {
             }
         }
         case 'todos/todosLoaded': {
+            const newEntities = {}
+            action.payload.forEach(todo =>{
+                newEntities[todo.id] = todo
+            })
             return {
                 ...state,
                 status: 'idle',
-                entities: action.payload
+                entities: newEntities
             }
         }
         case 'todos/todoAdded': {
-            return [...state.entities, action.payload];
-        }
-        case 'todos/todoToggled': {
+            const todo = action.payload;
             return {
                 ...state,
-                entities: state.entities.map((todo) => {
-                    if (todo.id !== action.payload) {
-                        return todo;
-                    }
-                    return {
+                entities: {
+                    ...state.entities,
+                    [todo.id]: todo
+                }
+            };
+        }
+        case 'todos/todoToggled': {
+            const todoId = action.payload;
+            const todo = state.entities[todoId]
+            return {
+                ...state,
+                entities: {
+                    ...state.entities,
+                    [todoId]: {
                         ...todo,
                         completed: !todo.completed
                     }
-                })
+                }
             }
         }
         case 'todos/colorSelected': {
             const { color, todoId } = action.payload;
+            const todo = state.entities[todoId];
             return {
                 ...state,
-                entities: state.entities.map((todo) => {
-                    if (todo.id !== todoId) {
-                        return todo;
-                    }
-                    return {
+                entities: {
+                    ...state.entities,
+                    [todoId] :{
                         ...todo,
                         color
                     }
-                })
+                }
             }
         }
         case 'todos/todoDeleted': {
+            const newEntities = { ...state.entities };
+            delete newEntities[action.payload];
             return {
                 ...state,
-                entities: state.entities.filter((todo) => todo.id !== action.payload)
+                entities: newEntities
             }
         }
         case 'todos/allCompleted': {
+            const newEntities = { ...state.entities };
+            Object.values(newEntities).forEach(todo =>{
+                newEntities[todo.id] ={
+                    ...todo,
+                    completed: true
+                }
+            })
             return {
                 ...state,
-                entities: state.entities.map((todo) => {
-                    return { ...todo, completed: true }
-                })
+                entities: newEntities
             }
         }
         case 'todos/completedCleared': {
+            const newEntities = { ...state.entities };
+            Object.values(newEntities).forEach(todo =>{
+                if (todo.completed){
+                    delete newEntities[todo.id]
+                }
+            })
             return {
                 ...state,
-                entities: state.entities.filter((todo) => !todo.completed)
+                entities: newEntities
             }
         }
         default:
@@ -95,11 +118,11 @@ export const todoDeleted = (todoId) => ({
     payload: todoId
 })
 
-export const allTodosCompleted = () => ({type: 'todos/allCompleted'})
+export const allTodosCompleted = () => ({ type: 'todos/allCompleted' })
 
-export const completedTodosCleared = () => ({type: 'todos/completedCleared'})
+export const completedTodosCleared = () => ({ type: 'todos/completedCleared' })
 
-export const todosLoading = () => ({type: 'todos/todosLoading'})
+export const todosLoading = () => ({ type: 'todos/todosLoading' })
 
 export const todosLoaded = (todos) => ({
     type: 'todos/todosLoaded',
@@ -122,11 +145,14 @@ export function saveNewTodo(text) {
     }
 
 }
+const selectTodoEntities = state => state.todos.entities;
 
-export const selectTodos = (state) => state.todos.entities;
+export const selectTodos = createSelector(selectTodoEntities, entities =>
+    Object.values(entities)
+)
 
 export const selectTodoById = (state, todoId) => {
-    return selectTodos(state).find((todo) => todo.id === todoId)
+    return selectTodoEntities(state)[todoId]
 }
 
 export const selectTodoIds = createSelector(
